@@ -63,13 +63,13 @@ public class ForcefulJsonConvertor extends AbstractMediator {
 																	// evaluation
 		log.debug("ScripEngine intialized");
 
-		Object obj1 = null;// to hold the NativeObject from json evaluation by
+		Object nativeObj = null;// to hold the NativeObject from json evaluation by
 							// the script engine
 		String jsonString = jsonObj.toString(); // json string of the pay load
 
 		try {
 
-			obj1 = se.eval("(" + jsonString + ")");// this returns a scriptable
+			nativeObj = se.eval("(" + jsonString + ")");// this returns a scriptable
 													// json object that is
 													// compatible to use within
 													// script mediator
@@ -81,7 +81,7 @@ public class ForcefulJsonConvertor extends AbstractMediator {
 			return false;
 
 		}
-		context.setProperty("FORCE_BUILT_JSON", obj1);// setting the force build
+		context.setProperty("FORCE_BUILT_JSON", nativeObj);// setting the force build
 														// object to message
 														// context , so that
 														// this can be taken in
