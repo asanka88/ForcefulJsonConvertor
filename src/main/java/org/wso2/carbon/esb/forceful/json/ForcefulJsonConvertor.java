@@ -13,7 +13,8 @@ import com.sun.phobos.script.javascript.RhinoScriptEngineFactory;
 /***
  * Reason for this mediator: When an XML payload is returning from the Backend , users cannot retrieve the 
  * JSON payload by using mc.getPayloadJSON() in the script mediator.
- *IMPORTANT: Use this before script mediator .. 
+ *IMPORTANT: Build the jar, and copy to {carbon.home}/repository/components/lib and restart the server.
+ * Use this before script mediator . This has been tested with ESB 4.7.0 only.
  *         <class name="org.wso2.carbon.esb.forceful.json.ForcefulJsonConvertor"/>
  *         <script .....
  To solve this problem this mediator was developed
