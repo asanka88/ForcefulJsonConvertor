@@ -12,7 +12,11 @@ import org.json.XML;
 import com.sun.phobos.script.javascript.RhinoScriptEngineFactory;
 /***
  * Reason for this mediator: When an XML payload is returning from the Backend , users cannot retrieve the 
- * JSON payload by using mc.getPayloadJSON() in the script mediator. To solve this problem this mediator was developed
+ * JSON payload by using mc.getPayloadJSON() in the script mediator.
+ *IMPORTANT: Use this before script mediator .. 
+ *         <class name="org.wso2.carbon.esb.forceful.json.ForcefulJsonConvertor"/>
+ *         <script .....
+ To solve this problem this mediator was developed
  * Here this converts the XML payload to JSON and set it as a property of the message context with the name 
  * "FORCE_BUILT_JSON", to retrive the payload and 
  * 
