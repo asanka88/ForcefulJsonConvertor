@@ -28,8 +28,9 @@ org.apache.axis2.json.JSONStreamBuilder
           //
            mc.setPayloadJSON(json);
   ```
-   ```xml</script>
-   </code>
+   ```xml
+   </script>
+    
    
 ```
    
