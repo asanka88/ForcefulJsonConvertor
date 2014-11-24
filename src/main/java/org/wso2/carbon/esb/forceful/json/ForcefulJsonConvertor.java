@@ -33,15 +33,18 @@ import com.sun.phobos.script.javascript.RhinoScriptEngineFactory;
 
 public class ForcefulJsonConvertor extends AbstractMediator {
 
+    private boolean isDebugEnabled;
 	public boolean mediate(MessageContext context) {
 		// TODO Implement your mediation logic here
+        isDebugEnabled=log.isDebugEnabled();
 		log.debug("Inside forceful json convertor mediator");
 		OMElement body = context.getEnvelope().getBody().getFirstElement();// get
 																			// the
 																			// xml
 																			// payload
-		log.debug("Message body retireved:" + body.toString());
-
+        if(isDebugEnabled) {
+            log.debug("Message body retireved:" + body.toString());
+        }
 		JSONObject jsonObj = null;
 		try {
 			jsonObj = XML.toJSONObject(body.toString());// convert to JSON
