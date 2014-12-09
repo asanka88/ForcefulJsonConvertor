@@ -2,6 +2,12 @@ package org.wso2.carbon.esb.forceful.json;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+import javax.xml.namespace.QName;
+
+import org.apache.axiom.om.OMAbstractFactory;
+import org.apache.axiom.om.OMFactory;
+import org.apache.axiom.soap.SOAPBody;
+
 import org.apache.axiom.om.OMElement;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.mediators.AbstractMediator;
@@ -10,6 +16,9 @@ import org.json.JSONObject;
 import org.json.XML;
 
 import com.sun.phobos.script.javascript.RhinoScriptEngineFactory;
+
+import java.util.Iterator;
+
 /***
  * Reason for this mediator: When an XML payload is returning from the Backend , users cannot retrieve the 
  * JSON payload by using mc.getPayloadJSON() in the script mediator.
@@ -39,10 +48,21 @@ public class ForcefulJsonConvertor extends AbstractMediator {
 		// TODO Implement your mediation logic here
         isDebugEnabled=log.isDebugEnabled();
 		log.debug("Inside forceful json convertor mediator");
-		OMElement body = context.getEnvelope().getBody().getFirstElement();// get
-																			// the
-																			// xml
-																			// payload
+		org.apache.axiom.soap.SOAPBody soapBody = context.getEnvelope().getBody();
+		OMElement body=null;
+		if(isArray(soapBody)){
+			OMElement rootElement= OMAbstractFactory.getOMFactory().createOMElement(new QName(DEFAULT_JSON_ROOT_ELEMENT_NAME));
+			Iterator<OMElement> bodyElements=soapBody.getChildElements();
+			while (bodyElements.hasNext()){
+				rootElement.addChild(bodyElements.next());
+			}
+			body=rootElement;
+
+		}else{
+			body = soapBody.getFirstElement();
+
+		}
+
         if(isDebugEnabled) {
             log.debug("Message body retireved:" + body.toString());
         }
@@ -50,11 +70,14 @@ public class ForcefulJsonConvertor extends AbstractMediator {
 		try {
 			jsonObj = XML.toJSONObject(body.toString());// convert to JSON
 														// Object
-			JSONObject innerObject =(JSONObject) jsonObj.get(DEFAULT_JSON_ROOT_ELEMENT_NAME);
-
-			if(innerObject!=null){
-				jsonObj=innerObject;
+			if(jsonObj.has(DEFAULT_JSON_ROOT_ELEMENT_NAME)){
+				JSONObject innerObject =(JSONObject) jsonObj.get(DEFAULT_JSON_ROOT_ELEMENT_NAME);
+				if(innerObject!=null){
+					jsonObj=innerObject;
+				}
 			}
+
+
 
 			log.debug("JSON Object created:" + jsonObj.toString());
 
@@ -101,5 +124,22 @@ public class ForcefulJsonConvertor extends AbstractMediator {
 
 		log.debug("Exiting the ForcefulJsonConvertor ....");
 		return true;
+	}
+
+	private boolean isArray(SOAPBody body){
+		int count=0;
+		Iterator<OMElement> elements = body.getChildElements();
+		while(elements.hasNext()){
+			OMElement tmp=elements.next();
+			System.out.println("==Local Name==");
+			System.out.println(tmp.getLocalName());
+			count++;
+			if(count>1){
+				return true;
+			}
+
+		}
+		return false;
+
 	}
 }
