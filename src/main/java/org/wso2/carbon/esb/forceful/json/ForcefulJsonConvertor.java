@@ -50,7 +50,7 @@ public class ForcefulJsonConvertor extends AbstractMediator {
 		log.debug("Inside forceful json convertor mediator");
 		org.apache.axiom.soap.SOAPBody soapBody = context.getEnvelope().getBody();
 		OMElement body=null;
-		if(isArray(soapBody)){
+		if(isArray(soapBody)){//check whether incoming payload is an array
 			OMElement rootElement= OMAbstractFactory.getOMFactory().createOMElement(new QName(DEFAULT_JSON_ROOT_ELEMENT_NAME));
 			Iterator<OMElement> bodyElements=soapBody.getChildElements();
 			while (bodyElements.hasNext()){
@@ -60,7 +60,6 @@ public class ForcefulJsonConvertor extends AbstractMediator {
 
 		}else{
 			body = soapBody.getFirstElement();
-
 		}
 
         if(isDebugEnabled) {
@@ -70,14 +69,12 @@ public class ForcefulJsonConvertor extends AbstractMediator {
 		try {
 			jsonObj = XML.toJSONObject(body.toString());// convert to JSON
 														// Object
-			if(jsonObj.has(DEFAULT_JSON_ROOT_ELEMENT_NAME)){
+			if(jsonObj.has(DEFAULT_JSON_ROOT_ELEMENT_NAME)){//to Deal with the jsonObject element added in some builders
 				JSONObject innerObject =(JSONObject) jsonObj.get(DEFAULT_JSON_ROOT_ELEMENT_NAME);
 				if(innerObject!=null){
 					jsonObj=innerObject;
 				}
 			}
-
-
 
 			log.debug("JSON Object created:" + jsonObj.toString());
 
