@@ -124,18 +124,19 @@ public class ForcefulJsonConvertor extends AbstractMediator {
 	}
 
 	private boolean isArray(SOAPBody body){
+		log.debug("Entering isArray mehtod");
 		int count=0;
 		Iterator<OMElement> elements = body.getChildElements();
 		while(elements.hasNext()){
 			OMElement tmp=elements.next();
-			System.out.println("==Local Name==");
-			System.out.println(tmp.getLocalName());
 			count++;
 			if(count>1){
+				log.debug("Incoming payload is a JSON Array");
 				return true;
 			}
 
 		}
+		log.debug("Incoming payload is NOT a JSON Array");
 		return false;
 
 	}
