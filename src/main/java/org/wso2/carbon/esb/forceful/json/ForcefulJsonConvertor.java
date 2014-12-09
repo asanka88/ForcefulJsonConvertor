@@ -33,7 +33,8 @@ import com.sun.phobos.script.javascript.RhinoScriptEngineFactory;
 
 public class ForcefulJsonConvertor extends AbstractMediator {
 
-    private boolean isDebugEnabled;
+	public static final String DEFAULT_JSON_ROOT_ELEMENT_NAME = "jsonObject";
+	private boolean isDebugEnabled;
 	public boolean mediate(MessageContext context) {
 		// TODO Implement your mediation logic here
         isDebugEnabled=log.isDebugEnabled();
@@ -49,6 +50,12 @@ public class ForcefulJsonConvertor extends AbstractMediator {
 		try {
 			jsonObj = XML.toJSONObject(body.toString());// convert to JSON
 														// Object
+			JSONObject innerObject =(JSONObject) jsonObj.get(DEFAULT_JSON_ROOT_ELEMENT_NAME);
+
+			if(innerObject!=null){
+				jsonObj=innerObject;
+			}
+
 			log.debug("JSON Object created:" + jsonObj.toString());
 
 		} catch (JSONException e1) {
